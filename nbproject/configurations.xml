@@ -23,6 +23,7 @@
         <itemPath>mcc_generated_files/i2c2_driver.h</itemPath>
       </logicalFolder>
       <itemPath>EMC1414_API.h</itemPath>
+      <itemPath>MAX31855_API.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -48,6 +49,7 @@
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>EMC1414_API.c</itemPath>
+      <itemPath>MAX31855_API.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

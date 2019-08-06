@@ -369,7 +369,7 @@
     </code>
 
 */
-#define SS1_SetHigh()          _LATB11 = 1
+#define SS1_OFF()          _LATB11 = 1
 /**
   @Summary
     Sets the GPIO pin, RB11, low using LATB11.
@@ -393,7 +393,7 @@
     </code>
 
 */
-#define SS1_SetLow()           _LATB11 = 0
+#define SS1_ON()           _LATB11 = 0
 /**
   @Summary
     Toggles the GPIO pin, RB11, using LATB11.

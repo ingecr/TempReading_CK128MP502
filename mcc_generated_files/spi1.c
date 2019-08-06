@@ -96,7 +96,7 @@ void SPI1_Initialize (void)
     // SPI1URDTH 0; 
     SPI1URDTH = 0x00;
     // SPIEN enabled; DISSDO disabled; MCLKEN FOSC/2; CKP Idle:Low, Active:High; SSEN disabled; MSTEN Master; MODE16 enabled; SMP End; DISSCK disabled; SPIFE Frame Sync pulse precedes; CKE Idle to Active; MODE32 disabled; SPISIDL disabled; ENHBUF enabled; DISSDI disabled; 
-    SPI1CON1L = 0x8621;
+    SPI1CON1L = 0x8621;  //0x8621
 
 }
 
@@ -116,8 +116,27 @@ void SPI1_Exchange( uint8_t *pTransmitData, uint8_t *pReceiveData )
     }
 
     *((uint16_t*)pReceiveData) = SPI1BUFL;
-
 }
+ 
+
+/*
+uint8_t SPI1_Exchange(void)
+{
+    uint16_t dummy_data = 0x0295;
+    uint16_t temporal   = 0;
+    while( SPI1STATLbits.SPITBF == true )
+    {
+
+    }
+
+    SPI1BUFL = dummy_data;
+
+    while ( SPI1STATLbits.SPIRBE == true)
+    {
+    
+    }
+    temporal  
+}*/
 
 uint16_t SPI1_ExchangeBuffer(uint8_t *pTransmitData, uint16_t byteCount, uint8_t *pReceiveData)
 {

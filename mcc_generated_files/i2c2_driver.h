@@ -50,7 +50,7 @@ INLINE char i2c2_driver_getRXData(char);
 INLINE char i2c2_driver_TXData(uint8_t);
 INLINE void i2c2_driver_resetBus(void);
 INLINE void i2c2_driver_start(uint8_t);
-INLINE void i2c2_driver_restart(uint8_t);
+INLINE char i2c2_driver_restart(uint8_t);
 INLINE void i2c2_driver_stop(void);
 INLINE char i2c2_driver_isNACK(void);
 INLINE void i2c2_driver_startRX(void);

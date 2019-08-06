@@ -48,6 +48,7 @@
 #include "mcc_generated_files/system.h"
 #include "libpic30.h"
 #include "EMC1414_API.h"
+#include "MAX31855_API.h"
 #include <xc.h>
 
 
@@ -56,16 +57,23 @@ int Temp_Ext_1  = 0;
 int Temp_Ext_2  = 0;
 int Temp_Ext_3  = 0;
 
+uint16_t thermoTemp     = 0;
+uint16_t internalTemp   = 0;
+
 int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    EMC1414_Init();
+    //EMC1414_Init();
     
-    I2C2CONLbits.I2CEN = 0;
+    //I2C2CONLbits.I2CEN = 0;
     while (1)
     {
         
+        
+        get_MAX31855_temperatures(&thermoTemp,&internalTemp);
+        
+        /*
         I2C2CONLbits.I2CEN = 1;
         Temp_Int = MCP1414_readInterTemp();
         Temp_Ext_1 = MCP1414_readExtern1Temp();
@@ -73,10 +81,10 @@ int main(void)
         Temp_Ext_3 = MCP1414_readExtern3Temp();
         I2C2CONLbits.I2CEN = 0;
         
+        */     
         LED_OP_Toggle();
-        //__delay_ms(10);
+
          
     }
     return 1; 
 }
-

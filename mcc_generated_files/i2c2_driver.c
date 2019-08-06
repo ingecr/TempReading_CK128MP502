@@ -31,6 +31,7 @@
 #endif
 
 #include <libpic30.h>
+#include <p33CK128MP502.h>
 
 void (*i2c2_driver_busCollisionISR)(void);
 void (*i2c2_driver_Masteri2cISR)(void);
@@ -92,14 +93,17 @@ bool i2c2_driver_driver_open(void)
         // initialize the hardware
         // STAT Setting 
         I2C2STAT = 0x0;
+     
+        // Baud Rate Generator Value: I2CBRG 100000;   
+        I2C2BRG = 0x12;
         
         // CON Setting
-        I2C2CONL = 0x8000;
-        
-        // Baud Rate Generator Value: I2CBRG 100000;   
-        I2C2BRG = 18;
-        
-        //I2C2CONLbits.I2CEN = 1;
+        I2C2CONL = 0b0000001100000000;          /*0x8000- 0b 1000 0011 0000 0000*/
+        I2C2CONLbits.SCLREL =   1;     
+        I2C2CONLbits.I2CEN  =   1;
+        IEC1bits.MI2C1IE    =   0;
+        I2C2STATbits.S      =   0;
+       
         return true;
     }
     else
@@ -156,24 +160,45 @@ inline void i2c2_driver_resetBus(void)
 
 inline void i2c2_driver_start(uint8_t slave_address)
 {
-    I2C2CONLbits.SEN = 1;
-    while(I2C2CONLbits.SEN);
-    i2c2_clearIRQ();
-    if(!i2c2_driver_TXData(slave_address)) while (1);
-
+    while(1){
+        I2C2CONLbits.SEN = 1;
+        while(I2C2CONLbits.SEN);
+        i2c2_clearIRQ();
+        
+        if(!I2C2STATbits.S){
+            if(I2C2STATbits.IWCOL || I2C2STATbits.I2COV){
+               I2C2STATbits.IWCOL = 0;
+               I2C2STATbits.I2COV = 0;
+               continue;
+            }
+        }
+        if(!i2c2_driver_TXData(slave_address)){
+            i2c2_driver_stop();
+            continue;
+        }
+        break;
+    }
 }
 
-inline void i2c2_driver_restart(uint8_t address)
+inline char i2c2_driver_restart(uint8_t slave_ReadAddress)
 {
-    I2C2CONLbits.RSEN = 1;
+    I2C2CONLbits.RSEN = 1;              
     while(I2C2CONLbits.SEN);
     i2c2_clearIRQ();
-    if(!i2c2_driver_TXData(address)) while (1);
+    if(!i2c2_driver_TXData(slave_ReadAddress)){
+        return 0;
+    }else{
+        return 1;
+    }
 }
 
 inline void i2c2_driver_stop(void)
 {
     I2C2CONLbits.PEN = 1;
+    while(I2C2CONLbits.PEN);
+    i2c2_clearIRQ();
+    
+    
 }
 
 inline char i2c2_driver_isNACK(void)
@@ -190,17 +215,19 @@ inline char i2c2_driver_getRXData(char flag)
 {
     i2c2_driver_startRX();
     while(!I2C2STATbits.RBF);
+    char buffer = I2C2RCV;
     if (flag == 0){
         i2c2_driver_sendACK();
     }else{
         i2c2_driver_sendNACK();
     }
-    return I2C2RCV;
+    return buffer;
     
 }
 
 inline char i2c2_driver_TXData(uint8_t data)
 {
+ 
     I2C2TRN = data;
     while(I2C2STATbits.TBF);     /*Wait untill the Tx buffer is Empty*/
     if(!I2C2STATbits.ACKSTAT){
