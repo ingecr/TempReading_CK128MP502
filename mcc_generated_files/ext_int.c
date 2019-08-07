@@ -49,6 +49,8 @@
  */
 
 #include "ext_int.h"
+#include <stdint.h>
+
 
 //***User Area Begin->code: Add External Interrupt handler specific headers 
 
@@ -60,7 +62,12 @@
  
  void __attribute__ ((weak)) EX_INT1_CallBack(void)
 {
-    // Add your custom callback code here
+    TRIAC_TRIGGER_Toggle();
+    uint32_t i; 
+    for(i = 0;i<10000;i++){
+    }
+    
+     
 }
 
 /**

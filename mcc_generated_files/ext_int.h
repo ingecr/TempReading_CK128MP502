@@ -50,6 +50,8 @@
 */
 
 #include <xc.h>
+#include "pin_manager.h"
+
 
 /**
     Section: Macros

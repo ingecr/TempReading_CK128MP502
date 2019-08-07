@@ -54,7 +54,7 @@ void INTERRUPT_Initialize (void)
 {
     //    INT1I: External Interrupt 1
     //    Priority: 1
-        IPC3bits.INT1IP = 1;
+        IPC3bits.INT1IP = 7;
     //    MICI: I2C1 Master Event
     //    Priority: 1
         IPC4bits.MI2C1IP = 1;

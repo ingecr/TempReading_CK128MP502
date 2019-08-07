@@ -52,6 +52,7 @@
 #include <xc.h>
 
 
+
 int Temp_Int    = 0;
 int Temp_Ext_1  = 0;
 int Temp_Ext_2  = 0;
@@ -65,13 +66,17 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     //EMC1414_Init();
+    //EXT_INT_Initialize();
     
     //I2C2CONLbits.I2CEN = 0;
+    //LED_OP_SetLow();
     while (1)
     {
         
-        
-        get_MAX31855_temperatures(&thermoTemp,&internalTemp);
+        /*Extraction of temperatures from MAX31855*/
+        //get_MAX31855_temperatures(&thermoTemp,&internalTemp);
+          
+        /*Extraction of temperatures from EMC1414*/
         
         /*
         I2C2CONLbits.I2CEN = 1;
@@ -79,11 +84,13 @@ int main(void)
         Temp_Ext_1 = MCP1414_readExtern1Temp();
         Temp_Ext_2 = MCP1414_readExtern2Temp();
         Temp_Ext_3 = MCP1414_readExtern3Temp();
-        I2C2CONLbits.I2CEN = 0;
-        
+        I2C2CONLbits.I2CEN = 0;      
         */     
-        LED_OP_Toggle();
-
+        //LED_OP_Toggle();
+        TRIAC_TRIGGER_SetHigh();
+        __delay_ms(500);
+        TRIAC_TRIGGER_SetLow();
+        __delay_ms(500);
          
     }
     return 1; 
