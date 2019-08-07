@@ -66,7 +66,7 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     //EMC1414_Init();
-    //EXT_INT_Initialize();
+    EXT_INT_Initialize();
     
     //I2C2CONLbits.I2CEN = 0;
     //LED_OP_SetLow();
@@ -85,12 +85,14 @@ int main(void)
         Temp_Ext_2 = MCP1414_readExtern2Temp();
         Temp_Ext_3 = MCP1414_readExtern3Temp();
         I2C2CONLbits.I2CEN = 0;      
-        */     
-        //LED_OP_Toggle();
-        TRIAC_TRIGGER_SetHigh();
-        __delay_ms(500);
-        TRIAC_TRIGGER_SetLow();
-        __delay_ms(500);
+        */   
+        
+        
+        LED_OP_Toggle();
+        //TRIAC_TRIGGER_Toggle();
+        //__delay_ms(500);
+        //TRIAC_TRIGGER_SetLow();
+        __delay_ms(50);
          
     }
     return 1; 
